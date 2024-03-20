@@ -10,6 +10,7 @@ export default function Home() {
           position: "absolute",
           zIndex: 2,
           opacity: 0.3,
+          filter: "brightness(0.6) contrast(2)",
           backdropFilter: "blur(30px) saturate(1700%)",
           pointerEvents: "none",
         }}

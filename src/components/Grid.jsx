@@ -377,6 +377,115 @@ export default function Grid() {
       }, rate);
     }, 1000);
   };
+  const multiColor = () => {
+    setTimeout(() => {
+      setPrimaryColor("bg-yellow-600");
+      setSecondaryColor("bg-yellow-300");
+    }, 1000);
+    setTimeout(() => {
+      setPrimaryColor("bg-blue-600");
+      setSecondaryColor("bg-blue-300");
+    }, 3000);
+    setTimeout(() => {
+      setPrimaryColor("bg-teal-600");
+      setSecondaryColor("bg-teal-300");
+    }, 4000);
+  };
+  const snakeGame = () => {
+    // ----- DOCUMENTATION -----
+
+    // The snake game is a game where the player controls a snake. The objective is to eat as many apples as possible.
+    // The game is over when the snake runs into itself or the edges of the grid.
+
+    // To run this effect, call the function snakeGame, and then the effect will run on the grid.
+
+    // example: snakeGame();
+
+    // ----- VARIABLES -----
+
+    // the rate at which the game runs
+    const rate = 100;
+
+    // ----- FUNCTIONS -----
+
+    // the main function to run the snake game, with a given rate
+    // setTimeout is used to delay the start of the game to let the grid load first
+    setTimeout(() => {
+      // the initial position of the snake, the direction of the snake, the position of the apple, and the length of the snake
+      let snake = [{ x: 0, y: 0 }];
+      let direction = "right";
+      let apple = { x: 0, y: 0 };
+      let length = 1;
+
+      // the function to generate a new apple
+      const newApple = () => {
+        apple = {
+          x: Math.floor(Math.random() * rows),
+          y: Math.floor(Math.random() * columns),
+        };
+        if (snake.some((cell) => cell.x === apple.x && cell.y === apple.y)) {
+          newApple();
+        }
+      };
+      newApple();
+
+      // the function to move the snake
+      const moveSnake = () => {
+        // the new position of the snake's head
+        let newHead = { x: snake[0].x, y: snake[0].y };
+        if (direction === "up") newHead.x--;
+
+        if (direction === "down") newHead.x++;
+
+        if (direction === "left") newHead.y--;
+
+        if (direction === "right") newHead.y++;
+
+        // if the snake runs into itself or the edges of the grid, the game is over
+        if (
+          newHead.x < 0 ||
+          newHead.x >= rows ||
+          newHead.y < 0 ||
+          newHead.y >= columns ||
+          snake.some((cell) => cell.x === newHead.x && cell.y === newHead.y)
+        ) {
+          // reset the game
+          window.location.reload();
+        }
+
+        // if the snake eats the apple, the length of the snake increases and a new apple is generated
+        if (newHead.x === apple.x && newHead.y === apple.y) {
+          length++;
+          newApple();
+        } else {
+          snake.pop();
+        }
+
+        // the new position of the snake's head
+        snake.unshift(newHead);
+
+        // show the snake and the apple
+        unGlowAll();
+        snake.forEach((cell) => {
+          glowElementForever(cell.x, cell.y);
+        });
+        glowElementForever(apple.x, apple.y);
+      };
+
+      // the function to change the direction of the snake
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowUp" && direction !== "down") direction = "up";
+        if (e.key === "ArrowDown" && direction !== "up") direction = "down";
+        if (e.key === "ArrowLeft" && direction !== "right") direction = "left";
+        if (e.key === "ArrowRight" && direction !== "left") direction = "right";
+      });
+
+      // run the game
+      const game = setInterval(() => {
+        moveSnake();
+      }, rate);
+    }, 1000);
+  };
 
   // ----- BLOAT CODE FOR TESTING -----
 
@@ -389,6 +498,15 @@ export default function Grid() {
     }
     if (e.key === "3") {
       firstOrderNuclearFission(200, 50);
+    }
+    if (e.key === "4") {
+      multiColor();
+    }
+    if (e.key === "5") {
+      snakeGame();
+    }
+    if (e.key === "r") {
+      window.location.reload();
     }
   });
 
