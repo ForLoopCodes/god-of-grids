@@ -14,10 +14,10 @@ export default function Grid() {
   const [columns, setColumns] = useState(
     Math.floor((window.innerWidth * 0.98) / (cellSize + gap))
   );
-  const [borderRadius, setBorderRadius] = useState(20);
-  const [primaryColor, setPrimaryColor] = useState("bg-cyan-300");
-  const [secondaryColor, setSecondaryColor] = useState("bg-cyan-500");
-  const [backgroundColor, setBackgroundColor] = useState("bg-neutral-800");
+  const [borderRadius, setBorderRadius] = useState(30);
+  const [primaryColor, setPrimaryColor] = useState("bg-red-600");
+  const [secondaryColor, setSecondaryColor] = useState("bg-red-300");
+  const [backgroundColor, setBackgroundColor] = useState("bg-neutral-900");
   const [transperantColor, setTransperantColor] = useState("bg-transparent");
 
   // for game of life, the initial live cells
@@ -140,6 +140,7 @@ export default function Grid() {
   // glow a specific element for time t1 and then hide it after time t2 (for first order nuclear fission)
   const glowElementAndHide = (x, y, t1, t2) => {
     const element = ref.current.children[x * columns + y] || null;
+    if (element.classList.contains(transperantColor)) return;
     if (!element) return;
     element.classList.add(primaryColor);
     element.classList.remove(backgroundColor);
@@ -167,7 +168,7 @@ export default function Grid() {
       for (let j = 0; j < columns; j++) {
         const element = ref.current.children[i * columns + j] || null;
         if (!element) return;
-        element.classList.add("bg-neutral-800");
+        element.classList.add(backgroundColor);
         element.classList.remove(primaryColor);
         element.classList.remove(secondaryColor);
       }
