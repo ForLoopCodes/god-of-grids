@@ -6,19 +6,21 @@ export default function Grid() {
   // ref to the grid
   const ref = useRef(null);
   // state variables for cell size, gap, rows, and columns of the grid
-  const [cellSize, setCellSize] = useState(30);
-  const [gap, setGap] = useState(2);
+  // show 30 cells in a row and 20 cells in a column
+  const [cellSize] = useState(window.innerWidth.toFixed(2) / 30);
+  const [gap] = useState(cellSize / 12);
   const [rows, setRows] = useState(
-    Math.floor((window.innerHeight * 0.98) / (cellSize + gap))
+    Math.floor((window.innerHeight * 0.98) / (cellSize + gap) - 1)
   );
   const [columns, setColumns] = useState(
     Math.floor((window.innerWidth * 0.98) / (cellSize + gap))
   );
-  const [borderRadius, setBorderRadius] = useState(30);
-  const [primaryColor, setPrimaryColor] = useState("bg-red-600");
-  const [secondaryColor, setSecondaryColor] = useState("bg-red-300");
-  const [backgroundColor, setBackgroundColor] = useState("bg-neutral-900");
-  const [transperantColor, setTransperantColor] = useState("bg-transparent");
+  const [borderRadius] = useState(30);
+  const [primaryColor, setPrimaryColor] = useState("bg-cyan-600"); // or bg-neutral-600
+  const [secondaryColor, setSecondaryColor] = useState("bg-cyan-400"); // or bg-neutral-400
+  const [backgroundColor] = useState("bg-neutral-800"); // or bg-neutral-200
+  const [transperantColor] = useState("bg-transparent");
+  const [hoverEffect, setHoverEffect] = useState(true);
 
   // for game of life, the initial live cells
   let liveCells = [
@@ -102,7 +104,7 @@ export default function Grid() {
 
   // set the number of rows and columns based on window size every time the window is resized
   window.addEventListener("resize", () => {
-    setRows(Math.floor((window.innerHeight * 0.98) / (cellSize + gap)));
+    setRows(Math.floor((window.innerHeight * 0.98) / (cellSize + gap)) - 1);
     setColumns(Math.floor((window.innerWidth * 0.98) / (cellSize + gap)));
   });
   // glow an element (for hover effect)
@@ -377,15 +379,33 @@ export default function Grid() {
       }, rate);
     }, 1000);
   };
+  // multi color effect
   const multiColor = () => {
+    // ----- DOCUMENTATION -----
+
+    // The multi color effect is an effect where the colors of the grid change every few seconds.
+    // The colors change in a sequence of red, yellow, blue, and teal.
+
+    // To run this effect, call the function multiColor, and then the effect will run on the grid.
+
+    // example: multiColor();
+
+    // ----- FUNCTIONS -----
+
+    // the main function to run the multi color effect
+    // setTimeout is used to delay the start of the effect to let the grid load first
+
+    // set yellow as color
     setTimeout(() => {
       setPrimaryColor("bg-yellow-600");
       setSecondaryColor("bg-yellow-300");
     }, 1000);
+    // set blue as color
     setTimeout(() => {
       setPrimaryColor("bg-blue-600");
       setSecondaryColor("bg-blue-300");
     }, 3000);
+    // set teal as color
     setTimeout(() => {
       setPrimaryColor("bg-teal-600");
       setSecondaryColor("bg-teal-300");
@@ -412,16 +432,24 @@ export default function Grid() {
     // setTimeout is used to delay the start of the game to let the grid load first
     setTimeout(() => {
       // the initial position of the snake, the direction of the snake, the position of the apple, and the length of the snake
-      let snake = [{ x: 0, y: 0 }];
+      let snake = [{ x: 0 + 1, y: 0 + 1 }];
       let direction = "right";
-      let apple = { x: 0, y: 0 };
-      let length = 1;
+      let apple = { x: 0 + 1, y: 0 + 1 };
 
+      for (let i = 0; i < rows; i++) {
+        glowElementForever(i, 0);
+        glowElementForever(i, columns - 1);
+      }
+      for (let i = 0; i < columns; i++) {
+        glowElementForever(0, i);
+        glowElementForever(rows - 1, i);
+      }
       // the function to generate a new apple
       const newApple = () => {
+        // dont generate the apple on the snake, or the edges of the grid
         apple = {
-          x: Math.floor(Math.random() * rows),
-          y: Math.floor(Math.random() * columns),
+          x: Math.floor(Math.random() * (rows - 2)) + 1,
+          y: Math.floor(Math.random() * (columns - 2)) + 1,
         };
         if (snake.some((cell) => cell.x === apple.x && cell.y === apple.y)) {
           newApple();
@@ -443,19 +471,20 @@ export default function Grid() {
 
         // if the snake runs into itself or the edges of the grid, the game is over
         if (
-          newHead.x < 0 ||
-          newHead.x >= rows ||
-          newHead.y < 0 ||
-          newHead.y >= columns ||
+          !ref.current.children[newHead.x * columns + newHead.y] ||
+          snake.some((cell) => cell.x <= 0) ||
+          snake.some((cell) => cell.y <= 0) ||
+          snake.some((cell) => cell.x >= rows - 1) ||
+          snake.some((cell) => cell.y >= columns - 1) ||
           snake.some((cell) => cell.x === newHead.x && cell.y === newHead.y)
         ) {
           // reset the game
+          clearInterval(game);
           window.location.reload();
         }
 
         // if the snake eats the apple, the length of the snake increases and a new apple is generated
         if (newHead.x === apple.x && newHead.y === apple.y) {
-          length++;
           newApple();
         } else {
           snake.pop();
@@ -465,7 +494,22 @@ export default function Grid() {
         snake.unshift(newHead);
 
         // show the snake and the apple
-        unGlowAll();
+        for (let i = 0; i < rows; i++) {
+          for (let j = 0; j < columns; j++) {
+            // dont unglow the border cells
+            if (
+              (i === 0 || i === rows - 1 || j === 0 || j === columns - 1) &&
+              !snake.some((cell) => cell.x === i && cell.y === j)
+            ) {
+              continue;
+            }
+            const element = ref.current.children[i * columns + j] || null;
+            if (!element) return;
+            element.classList.add(backgroundColor);
+            element.classList.remove(primaryColor);
+            element.classList.remove(secondaryColor);
+          }
+        }
         snake.forEach((cell) => {
           glowElementForever(cell.x, cell.y);
         });
@@ -490,20 +534,29 @@ export default function Grid() {
   // ----- BLOAT CODE FOR TESTING -----
 
   window.addEventListener("keydown", (e) => {
+    if (e.key === "0") {
+      setHoverEffect(!hoverEffect);
+      document.querySelector(".btn0").focus();
+    }
     if (e.key === "1") {
-      matrixRain(500, 1, 100, 1500);
+      matrixRain(500, 1, 100, 800);
+      document.querySelector(".btn1").focus();
     }
     if (e.key === "2") {
-      gameOfLife(300);
+      gameOfLife(200);
+      document.querySelector(".btn2").focus();
     }
     if (e.key === "3") {
       firstOrderNuclearFission(200, 50);
+      document.querySelector(".btn3").focus();
     }
     if (e.key === "4") {
       multiColor();
+      document.querySelector(".btn4").focus();
     }
     if (e.key === "5") {
       snakeGame();
+      document.querySelector(".btn5").focus();
     }
     if (e.key === "r") {
       window.location.reload();
@@ -514,6 +567,114 @@ export default function Grid() {
 
   return (
     <div>
+      <div
+        className={"flex items-center justify-between text-lg"}
+        style={{
+          width: `${cellSize * columns + gap * (columns - 1)}px`,
+          height: `${cellSize}px`,
+          marginBottom: `${gap}px`,
+        }}
+      >
+        <div className="h-full flex items-center">
+          <button
+            className={`text-white font-bold py-2 px-4 h-full text-xl rounded ${backgroundColor} hover:bg-cyan-600 focus:bg-cyan-600 focus:outline-none focus:border-none btn0`}
+            style={{
+              width: `${cellSize * 3 + gap * (3 - 1)}px`,
+              borderRadius: `${(cellSize * borderRadius) / 100}px`,
+              fontFamily: "Space Mono",
+            }}
+            onClick={() => {
+              setHoverEffect(!hoverEffect);
+            }}
+          >
+            Fn0
+          </button>
+          <button
+            className={`text-white font-bold py-2 px-4 h-full text-xl rounded ${backgroundColor} hover:bg-cyan-600 focus:bg-cyan-600 focus:outline-none focus:border-none btn1`}
+            style={{
+              width: `${cellSize * 3 + gap * (3 - 1)}px`,
+              borderRadius: `${(cellSize * borderRadius) / 100}px`,
+              fontFamily: "Space Mono",
+              marginLeft: `${gap}px`,
+            }}
+            onClick={() => {
+              matrixRain(500, 1, 100, 800);
+            }}
+          >
+            Fn1
+          </button>
+          <button
+            className={`text-white font-bold py-2 px-4 h-full text-xl rounded ${backgroundColor} hover:bg-cyan-600 focus:bg-cyan-600 focus:outline-none focus:border-none btn2`}
+            style={{
+              width: `${cellSize * 3 + gap * (3 - 1)}px`,
+              borderRadius: `${(cellSize * borderRadius) / 100}px`,
+              fontFamily: "Space Mono",
+              marginLeft: `${gap}px`,
+            }}
+            onClick={() => {
+              gameOfLife(200);
+            }}
+          >
+            Fn2
+          </button>
+          <button
+            className={`text-white font-bold py-2 px-4 h-full text-xl rounded ${backgroundColor} hover:bg-cyan-600 focus:bg-cyan-600 focus:outline-none focus:border-none btn3`}
+            style={{
+              width: `${cellSize * 3 + gap * (3 - 1)}px`,
+              borderRadius: `${(cellSize * borderRadius) / 100}px`,
+              fontFamily: "Space Mono",
+              marginLeft: `${gap}px`,
+            }}
+            onClick={() => {
+              firstOrderNuclearFission(200, 50);
+            }}
+          >
+            Fn3
+          </button>
+          <button
+            className={`text-white font-bold py-2 px-4 h-full text-xl rounded ${backgroundColor} hover:bg-cyan-600 focus:bg-cyan-600 focus:outline-none focus:border-none btn4`}
+            style={{
+              width: `${cellSize * 3 + gap * (3 - 1)}px`,
+              borderRadius: `${(cellSize * borderRadius) / 100}px`,
+              fontFamily: "Space Mono",
+              marginLeft: `${gap}px`,
+            }}
+            onClick={() => {
+              multiColor();
+            }}
+          >
+            Fn4
+          </button>
+          <button
+            className={`text-white font-bold py-2 px-4 h-full text-xl rounded ${backgroundColor} hover:bg-cyan-600 focus:bg-cyan-600 focus:outline-none focus:border-none btn5`}
+            style={{
+              width: `${cellSize * 3 + gap * (3 - 1)}px`,
+              borderRadius: `${(cellSize * borderRadius) / 100}px`,
+              fontFamily: "Space Mono",
+              marginLeft: `${gap}px`,
+            }}
+            onClick={() => {
+              snakeGame();
+            }}
+          >
+            Fn5
+          </button>
+        </div>
+        <button
+          className={`text-white font-bold py-2 px-4 h-full text-xl rounded ${backgroundColor} hover:bg-cyan-600 focus:bg-cyan-600 focus:outline-none focus:border-none`}
+          style={{
+            width: `${cellSize * 3 + gap * (3 - 1)}px`,
+            borderRadius: `${(cellSize * borderRadius) / 100}px`,
+            fontFamily: "Space Mono",
+            marginLeft: `${gap}px`,
+          }}
+          onClick={() => {
+            window.location.reload();
+          }}
+        >
+          Rst
+        </button>
+      </div>
       <div
         className="w-full h-full grid"
         ref={ref}
@@ -527,12 +688,10 @@ export default function Grid() {
           Array.from({ length: rows * columns }).map((_, i) => (
             <div
               key={i}
-              className={
-                "flex items-center justify-center" + " " + backgroundColor
-              }
+              className={"flex items-center justify-center " + backgroundColor}
               onMouseOver={(e) => {
                 // glow the div when hovered over
-                glow(e);
+                hoverEffect && glow(e);
               }}
               onClick={(e) => {
                 // add the cell to the live cells array when clicked
@@ -549,10 +708,10 @@ export default function Grid() {
               onMouseOut={(e) => {
                 // when the mouse leaves the div, glow it, dim it, and then turn off the glow effect
                 setTimeout(() => {
-                  glowDim(e);
+                  hoverEffect && glowDim(e);
                 }, 500);
                 setTimeout(() => {
-                  glowOff(e);
+                  hoverEffect && glowOff(e);
                 }, 1000);
               }}
               style={{
