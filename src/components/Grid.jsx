@@ -8,7 +8,7 @@ export default function Grid() {
   // state variables for cell size, gap, rows, and columns of the grid
   // show 30 cells in a row and 20 cells in a column
   const [cellSize] = useState(
-    window.innerWidth >= 1200 ? window.innerWidth.toFixed(2) / 30 : 60
+    window.innerWidth >= 1200 ? window.innerWidth.toFixed(2) / 30 : 40
   );
   const [gap] = useState(cellSize / 12);
   const [rows, setRows] = useState(
@@ -579,7 +579,8 @@ export default function Grid() {
       window.location.reload();
     }
   });
-  if (localStorage.getItem("mode") === undefined)
+  // eslint-disable-next-line
+  if (localStorage.getItem("mode") == undefined)
     localStorage.setItem("mode", "matrixRain");
   if (localStorage.getItem("mode") === "matrixRain") {
     matrixRain(500, 1, 100, 1200);
