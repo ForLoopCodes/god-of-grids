@@ -25,3 +25,7 @@ h1 {
   font-weight: 700;
   font-size: 2.5rem;
 }
+
+.slide {
+  transition: 0.1s ease-in-out !important;
+}

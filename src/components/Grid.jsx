@@ -7,7 +7,9 @@ export default function Grid() {
   const ref = useRef(null);
   // state variables for cell size, gap, rows, and columns of the grid
   // show 30 cells in a row and 20 cells in a column
-  const [cellSize] = useState(window.innerWidth.toFixed(2) / 30);
+  const [cellSize] = useState(
+    window.innerWidth >= 1200 ? window.innerWidth.toFixed(2) / 30 : 60
+  );
   const [gap] = useState(cellSize / 12);
   const [rows, setRows] = useState(
     Math.floor((window.innerHeight * 0.98) / (cellSize + gap) - 1)
@@ -200,7 +202,7 @@ export default function Grid() {
 
     // the main function to make the rain fall, with a given density, angle, speed, and length
     // setTimeout is used to delay the start of the rain to let the grid load first
-    setTimeout(() => {
+    const rain = setTimeout(() => {
       const fall = setInterval(() => {
         // ----- VARIABLES -----
 
@@ -228,7 +230,13 @@ export default function Grid() {
       window.addEventListener("resize", () => {
         clearInterval(fall);
       });
+      // if rainspeed is 0, stop the rain
+      if (rainSpeed === 0) {
+        clearInterval(fall);
+        clearInterval(rain);
+      }
     }, 1000);
+    localStorage.setItem("mode", "matrixRain");
   };
   // game of life effect
   const gameOfLife = (rate) => {
@@ -345,6 +353,7 @@ export default function Grid() {
         reviveCells(toRevive);
       }, rate);
     }, 1000);
+    localStorage.setItem("mode", "gameOfLife");
   };
   // first order nuclear fission effect
   const firstOrderNuclearFission = (rate, density) => {
@@ -529,6 +538,7 @@ export default function Grid() {
         moveSnake();
       }, rate);
     }, 1000);
+    localStorage.setItem("mode", "snakeGame");
   };
 
   // ----- BLOAT CODE FOR TESTING -----
@@ -536,145 +546,172 @@ export default function Grid() {
   window.addEventListener("keydown", (e) => {
     if (e.key === "0") {
       setHoverEffect(!hoverEffect);
-      document.querySelector(".btn0").focus();
+      document.querySelector(".btn0") &&
+        document.querySelector(".btn0").focus();
     }
     if (e.key === "1") {
-      matrixRain(500, 1, 100, 800);
-      document.querySelector(".btn1").focus();
+      matrixRain(500, 1, 100, 1200);
+      document.querySelector(".btn1") &&
+        document.querySelector(".btn1").focus();
     }
     if (e.key === "2") {
       gameOfLife(200);
-      document.querySelector(".btn2").focus();
+      document.querySelector(".btn2") &&
+        document.querySelector(".btn2").focus();
     }
     if (e.key === "3") {
       firstOrderNuclearFission(200, 50);
-      document.querySelector(".btn3").focus();
+      document.querySelector(".btn3") &&
+        document.querySelector(".btn3").focus();
     }
     if (e.key === "4") {
       multiColor();
-      document.querySelector(".btn4").focus();
+      document.querySelector(".btn4") &&
+        document.querySelector(".btn4").focus();
     }
     if (e.key === "5") {
       snakeGame();
-      document.querySelector(".btn5").focus();
+      document.querySelector(".btn5") &&
+        document.querySelector(".btn5").focus();
     }
     if (e.key === "r") {
+      localStorage.setItem("mode", "");
       window.location.reload();
     }
   });
+  if (localStorage.getItem("mode") === undefined)
+    localStorage.setItem("mode", "matrixRain");
+  if (localStorage.getItem("mode") === "matrixRain") {
+    matrixRain(500, 1, 100, 1200);
+  }
+  if (localStorage.getItem("mode") === "gameOfLife") {
+    gameOfLife(200);
+  }
+  if (localStorage.getItem("mode") === "firstOrderNuclearFission") {
+    firstOrderNuclearFission(200, 50);
+  }
+  if (localStorage.getItem("mode") === "multiColor") {
+    multiColor();
+  }
+  if (localStorage.getItem("mode") === "snakeGame") {
+    snakeGame();
+  }
 
   // ----- RETURN -----
 
   return (
     <div>
-      <div
-        className={"flex items-center justify-between text-lg"}
-        style={{
-          width: `${cellSize * columns + gap * (columns - 1)}px`,
-          height: `${cellSize}px`,
-          marginBottom: `${gap}px`,
-        }}
-      >
-        <div className="h-full flex items-center">
-          <button
-            className={`text-white font-bold py-2 px-4 h-full text-xl rounded ${backgroundColor} hover:bg-cyan-600 focus:bg-cyan-600 focus:outline-none focus:border-none btn0`}
-            style={{
-              width: `${cellSize * 3 + gap * (3 - 1)}px`,
-              borderRadius: `${(cellSize * borderRadius) / 100}px`,
-              fontFamily: "Space Mono",
-            }}
-            onClick={() => {
-              setHoverEffect(!hoverEffect);
-            }}
-          >
-            Fn0
-          </button>
-          <button
-            className={`text-white font-bold py-2 px-4 h-full text-xl rounded ${backgroundColor} hover:bg-cyan-600 focus:bg-cyan-600 focus:outline-none focus:border-none btn1`}
-            style={{
-              width: `${cellSize * 3 + gap * (3 - 1)}px`,
-              borderRadius: `${(cellSize * borderRadius) / 100}px`,
-              fontFamily: "Space Mono",
-              marginLeft: `${gap}px`,
-            }}
-            onClick={() => {
-              matrixRain(500, 1, 100, 800);
-            }}
-          >
-            Fn1
-          </button>
-          <button
-            className={`text-white font-bold py-2 px-4 h-full text-xl rounded ${backgroundColor} hover:bg-cyan-600 focus:bg-cyan-600 focus:outline-none focus:border-none btn2`}
-            style={{
-              width: `${cellSize * 3 + gap * (3 - 1)}px`,
-              borderRadius: `${(cellSize * borderRadius) / 100}px`,
-              fontFamily: "Space Mono",
-              marginLeft: `${gap}px`,
-            }}
-            onClick={() => {
-              gameOfLife(200);
-            }}
-          >
-            Fn2
-          </button>
-          <button
-            className={`text-white font-bold py-2 px-4 h-full text-xl rounded ${backgroundColor} hover:bg-cyan-600 focus:bg-cyan-600 focus:outline-none focus:border-none btn3`}
-            style={{
-              width: `${cellSize * 3 + gap * (3 - 1)}px`,
-              borderRadius: `${(cellSize * borderRadius) / 100}px`,
-              fontFamily: "Space Mono",
-              marginLeft: `${gap}px`,
-            }}
-            onClick={() => {
-              firstOrderNuclearFission(200, 50);
-            }}
-          >
-            Fn3
-          </button>
-          <button
-            className={`text-white font-bold py-2 px-4 h-full text-xl rounded ${backgroundColor} hover:bg-cyan-600 focus:bg-cyan-600 focus:outline-none focus:border-none btn4`}
-            style={{
-              width: `${cellSize * 3 + gap * (3 - 1)}px`,
-              borderRadius: `${(cellSize * borderRadius) / 100}px`,
-              fontFamily: "Space Mono",
-              marginLeft: `${gap}px`,
-            }}
-            onClick={() => {
-              multiColor();
-            }}
-          >
-            Fn4
-          </button>
-          <button
-            className={`text-white font-bold py-2 px-4 h-full text-xl rounded ${backgroundColor} hover:bg-cyan-600 focus:bg-cyan-600 focus:outline-none focus:border-none btn5`}
-            style={{
-              width: `${cellSize * 3 + gap * (3 - 1)}px`,
-              borderRadius: `${(cellSize * borderRadius) / 100}px`,
-              fontFamily: "Space Mono",
-              marginLeft: `${gap}px`,
-            }}
-            onClick={() => {
-              snakeGame();
-            }}
-          >
-            Fn5
-          </button>
-        </div>
-        <button
-          className={`text-white font-bold py-2 px-4 h-full text-xl rounded ${backgroundColor} hover:bg-cyan-600 focus:bg-cyan-600 focus:outline-none focus:border-none`}
+      {window.innerWidth >= 1200 ? (
+        <div
+          className={"flex items-center justify-between text-lg"}
           style={{
-            width: `${cellSize * 3 + gap * (3 - 1)}px`,
-            borderRadius: `${(cellSize * borderRadius) / 100}px`,
-            fontFamily: "Space Mono",
-            marginLeft: `${gap}px`,
-          }}
-          onClick={() => {
-            window.location.reload();
+            width: `${cellSize * columns + gap * (columns - 1)}px`,
+            height: `${cellSize}px`,
+            marginBottom: `${gap}px`,
           }}
         >
-          Rst
-        </button>
-      </div>
+          <div className="h-full flex items-center">
+            <button
+              className={`text-white font-bold py-2 px-4 h-full text-xl rounded ${backgroundColor} hover:bg-cyan-600 focus:bg-cyan-600 focus:outline-none focus:border-none btn0`}
+              style={{
+                width: `${cellSize * 3 + gap * (3 - 1)}px`,
+                borderRadius: `${(cellSize * borderRadius) / 100}px`,
+                fontFamily: "Space Mono",
+              }}
+              onClick={() => {
+                setHoverEffect(!hoverEffect);
+              }}
+            >
+              Fn0
+            </button>
+            <button
+              className={`text-white font-bold py-2 px-4 h-full text-xl rounded ${backgroundColor} hover:bg-cyan-600 focus:bg-cyan-600 focus:outline-none focus:border-none btn1`}
+              style={{
+                width: `${cellSize * 3 + gap * (3 - 1)}px`,
+                borderRadius: `${(cellSize * borderRadius) / 100}px`,
+                fontFamily: "Space Mono",
+                marginLeft: `${gap}px`,
+              }}
+              onClick={() => {
+                matrixRain(500, 1, 100, 800);
+              }}
+            >
+              Fn1
+            </button>
+            <button
+              className={`text-white font-bold py-2 px-4 h-full text-xl rounded ${backgroundColor} hover:bg-cyan-600 focus:bg-cyan-600 focus:outline-none focus:border-none btn2`}
+              style={{
+                width: `${cellSize * 3 + gap * (3 - 1)}px`,
+                borderRadius: `${(cellSize * borderRadius) / 100}px`,
+                fontFamily: "Space Mono",
+                marginLeft: `${gap}px`,
+              }}
+              onClick={() => {
+                gameOfLife(200);
+              }}
+            >
+              Fn2
+            </button>
+            <button
+              className={`text-white font-bold py-2 px-4 h-full text-xl rounded ${backgroundColor} hover:bg-cyan-600 focus:bg-cyan-600 focus:outline-none focus:border-none btn3`}
+              style={{
+                width: `${cellSize * 3 + gap * (3 - 1)}px`,
+                borderRadius: `${(cellSize * borderRadius) / 100}px`,
+                fontFamily: "Space Mono",
+                marginLeft: `${gap}px`,
+              }}
+              onClick={() => {
+                firstOrderNuclearFission(200, 50);
+              }}
+            >
+              Fn3
+            </button>
+            <button
+              className={`text-white font-bold py-2 px-4 h-full text-xl rounded ${backgroundColor} hover:bg-cyan-600 focus:bg-cyan-600 focus:outline-none focus:border-none btn4`}
+              style={{
+                width: `${cellSize * 3 + gap * (3 - 1)}px`,
+                borderRadius: `${(cellSize * borderRadius) / 100}px`,
+                fontFamily: "Space Mono",
+                marginLeft: `${gap}px`,
+              }}
+              onClick={() => {
+                multiColor();
+              }}
+            >
+              Fn4
+            </button>
+            <button
+              className={`text-white font-bold py-2 px-4 h-full text-xl rounded ${backgroundColor} hover:bg-cyan-600 focus:bg-cyan-600 focus:outline-none focus:border-none btn5`}
+              style={{
+                width: `${cellSize * 3 + gap * (3 - 1)}px`,
+                borderRadius: `${(cellSize * borderRadius) / 100}px`,
+                fontFamily: "Space Mono",
+                marginLeft: `${gap}px`,
+              }}
+              onClick={() => {
+                snakeGame();
+              }}
+            >
+              Fn5
+            </button>
+          </div>
+          <button
+            className={`text-white font-bold py-2 px-4 h-full text-xl rounded ${backgroundColor} hover:bg-cyan-600 focus:bg-cyan-600 focus:outline-none focus:border-none`}
+            style={{
+              width: `${cellSize * 3 + gap * (3 - 1)}px`,
+              borderRadius: `${(cellSize * borderRadius) / 100}px`,
+              fontFamily: "Space Mono",
+              marginLeft: `${gap}px`,
+            }}
+            onClick={() => {
+              localStorage.setItem("mode", "");
+              window.location.reload();
+            }}
+          >
+            Rst
+          </button>
+        </div>
+      ) : null}
       <div
         className="w-full h-full grid"
         ref={ref}

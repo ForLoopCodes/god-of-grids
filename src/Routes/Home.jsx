@@ -1,49 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import Grid from "../components/Grid";
 
 export default function Home() {
-  // on scroll, change slide, scroll to view
-  // each silde is absolute on its real position, so we can scroll to it
-  let scrollable = true;
-  window.addEventListener("wheel", (e) => {
-    let slides = document.querySelectorAll(".slide");
-    let currentSlide = document.querySelector(".current-slide");
-    let currentSlideIndex = Array.from(slides).indexOf(currentSlide);
-    if (e.deltaY > 0) {
-      if (currentSlideIndex < slides.length - 1 && scrollable) {
-        scrollable = false;
-        slides[currentSlideIndex].classList.remove("current-slide");
-        slides[currentSlideIndex + 1].classList.add("current-slide");
-        slides[currentSlideIndex + 1].scrollIntoView();
-        setTimeout(() => {
-          scrollable = true;
-        }, 500);
-      }
-    }
-    if (e.deltaY < 0) {
-      if (currentSlideIndex > 0 && scrollable) {
-        scrollable = false;
-        slides[currentSlideIndex].classList.remove("current-slide");
-        slides[currentSlideIndex - 1].classList.add("current-slide");
-        slides[currentSlideIndex - 1].scrollIntoView();
-        setTimeout(() => {
-          scrollable = true;
-        }, 500);
-      }
-    }
-    if (!scrollable) {
-      // prevent scrolling
-      document.querySelector(".grain").style.pointerEvents = "all";
-    }
-  });
-
   return (
     <div>
       <div
         className="grain"
         style={{
-          position: "absolute",
-          zIndex: 2,
+          position: "fixed",
+          zIndex: 200,
           opacity: 0.3,
           filter: "brightness(0.6) contrast(2)",
           backdropFilter: "blur(70px) saturate(4000%)",
@@ -64,14 +29,27 @@ export default function Home() {
           <rect width="100%" height="100%" filter="url(#noiseFilter)" />
         </svg>
       </div>
-      <div className="flex items-center justify-center w-full h-screen slide current-slide">
+      <div
+        className="bg-black flex items-center z-0 justify-center w-full h-screen slide"
+        style={{
+          transform: "scale(0.9)",
+          borderRadius: "5vw",
+        }}
+      >
         <Grid />
       </div>
-      <div className="w-screen h-screen flex items-center justify-center slide">
-        <h1>hello</h1>
-      </div>
-      <div className="w-screen h-screen flex items-center justify-center slide">
-        <h1>hellow 1</h1>
+      <div
+        className={
+          "bg-black w-screen fixed h-screen z-1 flex items-center justify-center slide"
+        }
+        style={{
+          color: "white",
+          transform: "scale(1)",
+          borderRadius: "5vw",
+        }}
+      >
+        aos
+        <h1>Hello</h1>
       </div>
     </div>
   );
