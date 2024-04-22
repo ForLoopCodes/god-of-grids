@@ -83,7 +83,7 @@ export default function ContactsGrid() {
             className="text-sm gradient-text1 text-white"
             style={{ userSelect: "none" }}
           >
-            {contact.title} ↗️
+            {contact.title} ↗
           </h2>
           <h2
             className="text-xs text-white opacity-60 mt-2"

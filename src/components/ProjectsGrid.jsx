@@ -79,7 +79,7 @@ export default function ProjectsGrid() {
             <p className="text-sm text-white p-2 pb-2 opacity-60">
               {project.year}
             </p>
-            <p className="text-sm text-white p-2 pb-2 opacity-60">↗️</p>
+            <p className="text-sm text-white p-2 pb-2 opacity-60">↗</p>
           </div>
 
           <h2
