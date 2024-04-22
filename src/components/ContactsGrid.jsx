@@ -49,7 +49,7 @@ export default function ContactsGrid() {
     {
       title: "DETAILS",
       handle: `redirection`,
-      link: `https://forloopcodes-old.vercel.app/`,
+      link: `https://www.forloopcodes-old.vercel.app/`,
     },
     {
       title: "RESUME",
@@ -75,11 +75,7 @@ export default function ContactsGrid() {
           style={{
             background: "#161616",
           }}
-          onClick={() =>
-            (window.location.href = contact.link
-              ? "github.com/" + contact.link
-              : "mailto:meetnp1706@gmail.com")
-          }
+          onClick={() => (window.location.href = contact.link)}
         >
           <h2
             className="text-sm gradient-text1 text-white"
