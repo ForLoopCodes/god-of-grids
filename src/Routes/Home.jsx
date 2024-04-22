@@ -24,7 +24,6 @@ export default function Home() {
           filter: "brightness(0.6) contrast(2)",
           backdropFilter: "blur(70px) saturate(4000%)",
           pointerEvents: "none",
-          overflow: "hidden",
         }}
         width="100vw"
         height="100vh"
@@ -48,6 +47,7 @@ export default function Home() {
         }
         style={{
           transform: "scale(0.9)",
+          overflow: "hidden",
           zIndex: 5,
           borderRadius: "5vw",
         }}
