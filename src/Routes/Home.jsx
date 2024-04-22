@@ -1,7 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import Grid from "../components/Grid";
+import SkillsGrid from "../components/SkillsGrid";
 
 export default function Home() {
+  const [viewDetails, setViewDetails] = useState(false);
+  const [terminalWidth, setTerminalWidth] = useState(
+    window.innerWidth >= 1200 ? "80vw" : "100vw"
+  );
+  window.addEventListener("resize", () => {
+    setTerminalWidth(window.innerWidth >= 1200 ? "80vw" : "100vw");
+  });
   return (
     <div>
       <div
@@ -30,27 +38,56 @@ export default function Home() {
         </svg>
       </div>
       <div
-        className="bg-black flex items-center z-0 justify-center w-full h-screen slide"
+        className="flex items-center fixed justify-center w-full h-screen slide"
         style={{
           transform: "scale(0.9)",
+          zIndex: 5,
           borderRadius: "5vw",
         }}
       >
-        <Grid />
+        <Grid
+          showDetails={() => {
+            viewDetails ? setViewDetails(false) : setViewDetails(true);
+          }}
+          viewDetails={viewDetails}
+        />
       </div>
-      <div
-        className={
-          "bg-black w-screen fixed h-screen z-1 flex items-center justify-center slide"
-        }
-        style={{
-          color: "white",
-          transform: "scale(1)",
-          borderRadius: "5vw",
-        }}
-      >
-        aos
-        <h1>Hello</h1>
-      </div>
+      {viewDetails && (
+        <div
+          className={"absolute slide"}
+          style={{
+            color: "white",
+            top: "10vh",
+            width: terminalWidth,
+            overflowY: "auto",
+            padding: "20vh 8vw",
+            zIndex: 10,
+            animation: "fadeIn 5s ease-in-out",
+          }}
+        >
+          <h1
+            className="gradient-text1 w-48"
+            style={{
+              opacity: 1,
+            }}
+          >
+            FOR
+            <br />
+            LOOP
+          </h1>
+          <h1
+            style={{
+              opacity: 0.5,
+            }}
+          >
+            CODES.
+          </h1>
+          <p className="gradient-text0 mt-6 ml-1">
+            PRODUCT-FOCUSSED MERN FULL STACK DEVELOPER AND PYTHON ENTHUSIAST.
+          </p>
+          <SkillsGrid />
+        </div>
+      )}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 
-export default function Grid() {
+export default function Grid(props) {
   // ----- VARIABLES -----
 
   // ref to the grid
@@ -144,20 +144,22 @@ export default function Grid() {
   // glow a specific element for time t1 and then hide it after time t2 (for first order nuclear fission)
   const glowElementAndHide = (x, y, t1, t2) => {
     const element = ref.current.children[x * columns + y] || null;
-    if (element.classList.contains(transperantColor)) return;
     if (!element) return;
-    element.classList.add(primaryColor);
-    element.classList.remove(backgroundColor);
+    if (element.classList.contains(transperantColor)) return;
+    if (element) {
+      element.classList.add(primaryColor);
+      element.classList.remove(backgroundColor);
 
-    setTimeout(() => {
-      element.classList.add(secondaryColor);
-      element.classList.remove(primaryColor);
-    }, t1);
+      setTimeout(() => {
+        element.classList.add(secondaryColor);
+        element.classList.remove(primaryColor);
+      }, t1);
 
-    setTimeout(() => {
-      element.classList.add(transperantColor);
-      element.classList.remove(secondaryColor);
-    }, t2);
+      setTimeout(() => {
+        element.classList.add(transperantColor);
+        element.classList.remove(secondaryColor);
+      }, t2);
+    }
   };
   // glow a specific element forever (for game of life)
   const glowElementForever = (x, y) => {
@@ -563,6 +565,7 @@ export default function Grid() {
       firstOrderNuclearFission(200, 50);
       document.querySelector(".btn3") &&
         document.querySelector(".btn3").focus();
+      !props.viewDetails && props.showDetails();
     }
     if (e.key === "4") {
       multiColor();
@@ -611,7 +614,14 @@ export default function Grid() {
             marginBottom: `${gap}px`,
           }}
         >
-          <div className="h-full flex items-center">
+          <div
+            className="h-full flex items-center"
+            style={{
+              transition: "1s ease-in-out",
+              opacity: props.viewDetails ? 0 : 1,
+              pointerEvents: props.viewDetails ? "none" : "auto",
+            }}
+          >
             <button
               className={`text-white font-bold py-2 px-4 h-full text-xl rounded ${backgroundColor} hover:bg-cyan-600 focus:bg-cyan-600 focus:outline-none focus:border-none btn0`}
               style={{
@@ -663,6 +673,7 @@ export default function Grid() {
               }}
               onClick={() => {
                 firstOrderNuclearFission(200, 50);
+                !props.viewDetails && props.showDetails();
               }}
             >
               Fn3
@@ -719,6 +730,7 @@ export default function Grid() {
         style={{
           gridTemplateColumns: `repeat(${columns}, ${cellSize}px)`,
           gridGap: `${gap}px`,
+          pointerEvents: props.viewDetails ? "none" : "auto",
         }}
       >
         {
