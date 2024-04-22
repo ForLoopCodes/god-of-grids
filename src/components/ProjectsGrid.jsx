@@ -71,7 +71,7 @@ export default function ProjectsGrid() {
           }}
           onClick={() =>
             (window.location.href = project.link
-              ? "github.com/" + project.link
+              ? "https://github.com/" + project.link
               : "mailto:meetnp1706@gmail.com")
           }
         >

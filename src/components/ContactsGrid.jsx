@@ -9,12 +9,12 @@ export default function ContactsGrid() {
     {
       title: "GITHUB",
       handle: `@forloopcodes`,
-      link: `github.com/forloopcodes`,
+      link: `https://github.com/forloopcodes`,
     },
     {
       title: "TWITTER",
       handle: `@forloopcodes`,
-      link: `twitter.com/forloopcodes`,
+      link: `https://twitter.com/forloopcodes`,
     },
     {
       title: "MAIL",
@@ -39,7 +39,7 @@ export default function ContactsGrid() {
     {
       title: "YOUTUBE",
       handle: `@forloopcodes`,
-      link: `youtube.com/@forloopcodes`,
+      link: `https://youtube.com/@forloopcodes`,
     },
     {
       title: "BUYMEACOFFEE",
@@ -49,7 +49,7 @@ export default function ContactsGrid() {
     {
       title: "DETAILS",
       handle: `redirection`,
-      link: `https://www.forloopcodes-old.vercel.app/`,
+      link: `https://www.forloopcodes.github.io/`,
     },
     {
       title: "RESUME",
@@ -69,13 +69,15 @@ export default function ContactsGrid() {
       }
     >
       {contacts.map((contact, index) => (
-        <div
+        <a
+          href={contact.link}
+          target="_blank"
+          rel="noreferrer"
           key={index}
           className="p-3 text-center rounded-lg cursor-pointer transition-transform duration-300 flex flex-col justify-between card"
           style={{
             background: "#161616",
           }}
-          onClick={() => (window.location.href = contact.link)}
         >
           <h2
             className="text-sm gradient-text1 text-white"
@@ -89,7 +91,7 @@ export default function ContactsGrid() {
           >
             {contact.handle}
           </h2>
-        </div>
+        </a>
       ))}
     </div>
   );

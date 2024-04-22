@@ -34,7 +34,7 @@ export default function Home() {
           <filter id="noiseFilter">
             <feTurbulence
               type="fractalNoise"
-              baseFrequency={viewDetails ? "0.6" : "0.4"}
+              baseFrequency="0.6"
               stitchTiles="stitch"
             />
           </filter>
