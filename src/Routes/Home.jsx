@@ -3,11 +3,14 @@ import Grid from "../components/Grid";
 import SkillsGrid from "../components/SkillsGrid";
 
 export default function Home() {
-  const [viewDetails, setViewDetails] = useState(false);
+  const [viewDetails, setViewDetails] = useState(
+    window.innerWidth >= 1200 ? false : true
+  );
   const [terminalWidth, setTerminalWidth] = useState(
     window.innerWidth >= 1200 ? "80vw" : "100vw"
   );
   window.addEventListener("resize", () => {
+    setViewDetails(window.innerWidth >= 1200 ? false : true);
     setTerminalWidth(window.innerWidth >= 1200 ? "80vw" : "100vw");
   });
   return (
@@ -38,7 +41,10 @@ export default function Home() {
         </svg>
       </div>
       <div
-        className="flex items-center fixed justify-center w-full h-screen slide"
+        className={
+          "flex items-center justify-center w-full h-screen slide" +
+          (terminalWidth === "80vw" ? " fixed" : "")
+        }
         style={{
           transform: "scale(0.9)",
           zIndex: 5,
@@ -54,7 +60,9 @@ export default function Home() {
       </div>
       {viewDetails && (
         <div
-          className={"absolute slide"}
+          className={
+            "slide" + (terminalWidth === "80vw" ? "relative" : "absolute")
+          }
           style={{
             color: "white",
             top: "10vh",
