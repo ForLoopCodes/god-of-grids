@@ -24,6 +24,7 @@ export default function Home() {
           filter: "brightness(0.6) contrast(2)",
           backdropFilter: "blur(70px) saturate(4000%)",
           pointerEvents: "none",
+          overflow: "hidden",
         }}
         width="100vw"
         height="100vh"
@@ -63,7 +64,7 @@ export default function Home() {
           className={"slide absolute"}
           style={{
             color: "white",
-            top: terminalWidth === "80vw" ? "10vh" : "120vh",
+            top: terminalWidth === "80vw" ? "10vh" : "90vh",
             width: terminalWidth,
             overflowY: "auto",
             padding: "20vh 8vw",
