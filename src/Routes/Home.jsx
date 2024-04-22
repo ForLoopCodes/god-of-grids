@@ -32,7 +32,7 @@ export default function Home() {
           <filter id="noiseFilter">
             <feTurbulence
               type="fractalNoise"
-              baseFrequency="0.6"
+              baseFrequency={viewDetails ? "0.6" : "0.4"}
               stitchTiles="stitch"
             />
           </filter>
@@ -43,7 +43,7 @@ export default function Home() {
       <div
         className={
           "flex items-center justify-center w-full h-screen slide" +
-          (terminalWidth === "80vw" ? " fixed" : "")
+          (terminalWidth === "80vw" ? " fixed" : " relative")
         }
         style={{
           transform: "scale(0.9)",
@@ -61,10 +61,12 @@ export default function Home() {
       </div>
       {viewDetails && (
         <div
-          className={"slide absolute"}
+          className={
+            "slide" + (terminalWidth === "80vw" ? " absolute" : " relative")
+          }
           style={{
             color: "white",
-            top: terminalWidth === "80vw" ? "10vh" : "90vh",
+            top: terminalWidth === "80vw" ? "10vh" : "-20vh",
             width: terminalWidth,
             overflowY: "auto",
             padding: "20vh 8vw",
