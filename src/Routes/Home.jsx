@@ -60,12 +60,10 @@ export default function Home() {
       </div>
       {viewDetails && (
         <div
-          className={
-            "slide" + (terminalWidth === "80vw" ? "relative" : "absolute")
-          }
+          className={"slide absolute"}
           style={{
             color: "white",
-            top: "10vh",
+            top: terminalWidth === "80vw" ? "10vh" : "120vh",
             width: terminalWidth,
             overflowY: "auto",
             padding: "20vh 8vw",
