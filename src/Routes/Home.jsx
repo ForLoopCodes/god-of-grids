@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Grid from "../components/Grid";
 import SkillsGrid from "../components/SkillsGrid";
+import ProjectsGrid from "../components/ProjectsGrid";
+import ContactsGrid from "../components/ContactsGrid";
 
 export default function Home() {
   const [viewDetails, setViewDetails] = useState(
@@ -70,6 +72,7 @@ export default function Home() {
             width: terminalWidth,
             overflowY: "auto",
             padding: "20vh 8vw",
+            paddingBottom: terminalWidth === "80vw" ? "10vh" : "0",
             zIndex: 10,
             animation: "fadeIn 5s ease-in-out",
           }}
@@ -95,6 +98,8 @@ export default function Home() {
             PRODUCT-FOCUSSED MERN FULL STACK DEVELOPER AND PYTHON ENTHUSIAST.
           </p>
           <SkillsGrid />
+          <ProjectsGrid />
+          <ContactsGrid />
         </div>
       )}
     </div>

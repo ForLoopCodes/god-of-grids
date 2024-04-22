@@ -49,7 +49,12 @@ export default function SkillsGrid() {
     );
   });
   return (
-    <div className="mt-12 p-4 bg-neutral-800 rounded-lg w-full">
+    <div
+      className="mt-12 p-4 pb-8 rounded-lg w-full"
+      style={{
+        backgroundColor: "#161616",
+      }}
+    >
       <h2
         className="text-sm text-white p-2 pb-6"
         style={{
