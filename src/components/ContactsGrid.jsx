@@ -49,7 +49,7 @@ export default function ContactsGrid() {
     {
       title: "DETAILS",
       handle: `redirection`,
-      link: `https://www.forloopcodes.github.io/`,
+      link: `https://forloopcodes.github.io/`,
     },
     {
       title: "RESUME",
