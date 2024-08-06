@@ -27,6 +27,9 @@ export default function SkillsGrid() {
     "Matplotlib",
     "Kotlin Basics",
     "Java Basics",
+    "C",
+    "Data Structures",
+    "Algorithms",
   ];
   const [gridCols, setGridCols] = useState(
     window.innerWidth < 1500 && window.innerWidth >= 800

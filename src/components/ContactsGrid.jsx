@@ -54,7 +54,12 @@ export default function ContactsGrid() {
     {
       title: "RESUME",
       handle: `document`,
-      link: `https://www.github.com/forloopcodes/`,
+      link: `https://github.com/ForLoopCodes/ForLoopCodes/blob/main/Meet%20Patel%20Resume.pdf`,
+    },
+    {
+      title: "LINKEDIN",
+      handle: `@forloopcodes`,
+      link: `https://linkedin.com/in/forloopcodes`,
     },
   ];
   return (
